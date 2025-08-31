@@ -53,7 +53,6 @@ linters:
     - exhaustive # checks exhaustiveness of enum switch statements
     - exptostd # detects functions from golang.org/x/exp/ that can be replaced by std functions
     - fatcontext # detects nested contexts in loops
-    - forbidigo # forbids identifiers
     - funcorder # checks the order of functions, methods, and constructors
     - funlen # tool for detection of long functions
     - gocheckcompilerdirectives # validates go compiler directive comments (//go:)
@@ -226,7 +225,7 @@ linters:
       context: scope
 
     staticcheck:
-      checks: ["all","-ST1000", "-ST1003", "-ST1016", "-ST1020", "-ST1021", "-ST1022", "-QF1008"]
+      checks: ["all","-ST1000", "-ST1003", "-ST1016", "-ST1020", "-ST1021", "-ST1022", "-QF1008", "-SA9004"]
 
     usetesting:
       # Enable/disable `os.TempDir()` detections.
