@@ -18,6 +18,10 @@ type Config struct {
 	UseSSL          bool   `mapstructure:"use_ssl"`
 }
 
+func getConfigDir() string {
+	return filepath.Join(os.Getenv("HOME"), ".config/keyper/config.yaml")
+}
+
 func InitViper() *viper.Viper {
 	v := viper.New()
 	v.SetConfigName("config")
@@ -33,7 +37,13 @@ func LoadConfig() (*Config, error) {
 	if err := v.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
 			// first run, create config
-			return nil, nil
+			_, err := os.Create(getConfigDir())
+			if err != nil {
+				return nil, err
+			}
+			var cfg Config
+			err = WriteConfig(&cfg)
+			return nil, err
 		}
 	}
 
