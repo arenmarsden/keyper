@@ -6,25 +6,24 @@ import (
 
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
+
+	"github.com/arenmarsden/keyper/internal/config"
 )
 
 type Client struct {
 	client *minio.Client
 }
 
-type Credentials struct {
-	Endpoint        string
-	AccessKeyID     string
-	SecretAccessKey string
-	Region          string
-	UseSSL          bool
-}
+func NewClient() (*Client, error) {
+	config, err := config.LoadConfig()
+	if err != nil {
+		return nil, err
+	}
 
-func NewClient(creds *Credentials) (*Client, error) {
-	client, err := minio.New(creds.Endpoint, &minio.Options{
-		Creds:  credentials.NewStaticV4(creds.AccessKeyID, creds.SecretAccessKey, ""),
-		Secure: creds.UseSSL,
-		Region: creds.Region,
+	client, err := minio.New(config.Endpoint, &minio.Options{
+		Creds:  credentials.NewStaticV4(config.AccessKeyID, config.SecretAccessKey, ""),
+		Secure: config.UseSSL,
+		Region: config.Region,
 	})
 	if err != nil {
 		return nil, err
