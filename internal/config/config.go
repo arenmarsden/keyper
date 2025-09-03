@@ -19,7 +19,7 @@ type Config struct {
 }
 
 func getConfigDir() string {
-	return filepath.Join(os.Getenv("HOME"), ".config/keyper/config.yaml")
+	return filepath.Join(os.Getenv("HOME"), ".config/keyper")
 }
 
 func InitViper() *viper.Viper {
@@ -36,14 +36,9 @@ func LoadConfig() (*Config, error) {
 	v := InitViper()
 	if err := v.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
-			// first run, create config
-			_, err := os.Create(getConfigDir())
-			if err != nil {
+			if err := os.MkdirAll(getConfigDir(), 0o755); err != nil {
 				return nil, err
 			}
-			var cfg Config
-			err = WriteConfig(&cfg)
-			return nil, err
 		}
 	}
 
